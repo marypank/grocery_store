@@ -6,23 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Вход магазин "Продукты 364 дня"</title>
+    <title>Магазин "Продукты 364 дня"</title>
   </head>
   <body>
+    <?php
+        if(isset($_POST['login_btn'])) { 
+            include_once 'php/UserController.php';
+            $user = new UserController();
+            $res = $user->login();
+
+            if ($res === 14) {
+                var_dump('2323');
+            }
+        }
+    ?>
     <div class="container" style="height: 100vh;">
         <div class="row h-100 d-flex align-items-center justify-content-center">
             <div class="col"></div>
             <div class="col-4">
-                <form>
+                <form action="" method="POST">
                     <div class="mb-3">
                         <label for="login" class="form-label">Логин</label>
-                        <input type="text" class="form-control" id="login">
+                        <input type="text" class="form-control" id="login" name="login">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="password">
+                        <input type="password" class="form-control" id="password" name="password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Вход</button>
+                    <button type="submit" class="btn btn-primary" name="login_btn" value="login_btn">Вход</button>
                 </form>
             </div>
             <div class="col"></div>

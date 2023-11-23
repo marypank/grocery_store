@@ -9,6 +9,11 @@
     <title>Магазин "Продукты 364 дня"</title>
   </head>
   <body>
+    <?php 
+		if (!isset($_SESSION['session_username'])) {
+			header('Location: login.php');
+		}
+	?>
     <div style="height: 100vh;">
         <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
             <div class="container">
