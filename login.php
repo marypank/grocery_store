@@ -10,13 +10,27 @@
   </head>
   <body>
     <?php
+        if(session_id() == '') {
+            session_start();
+        }
+        if (isset($_SESSION['store_login'])) {
+            header('Location: index.php');
+        }
+        $result = [
+            'success' => true,
+            'message' => '',
+            'data' => [
+                'login' => null,
+                'password' => null,
+            ],
+        ];
         if(isset($_POST['login_btn'])) { 
             include_once 'php/UserController.php';
             $user = new UserController();
-            $res = $user->login();
+            $result = $user->login();
 
-            if ($res === 14) {
-                var_dump('2323');
+            if ($result['success']) {
+                header('Location: index.php');
             }
         }
     ?>
@@ -25,9 +39,13 @@
             <div class="col"></div>
             <div class="col-4">
                 <form action="" method="POST">
+                    <h2>Вход</h2>
+                    <?php if (!$result['success']) : ?>
+                        <div class="alert alert-danger" role="alert"><?= $result['message'] ?></div>
+                    <?php endif; ?>
                     <div class="mb-3">
                         <label for="login" class="form-label">Логин</label>
-                        <input type="text" class="form-control" id="login" name="login">
+                        <input type="text" class="form-control" id="login" name="login" value=<?= $result['data']['login'] ?? '' ?>>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Пароль</label>

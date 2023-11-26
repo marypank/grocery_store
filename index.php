@@ -9,10 +9,20 @@
     <title>Магазин "Продукты 364 дня"</title>
   </head>
   <body>
-    <?php 
-		if (!isset($_SESSION['session_username'])) {
+    <?php
+        if(session_id() == '') {
+            session_start();
+        }
+        if (!isset($_SESSION['store_login'])) {
 			header('Location: login.php');
 		}
+
+        include_once 'php/ProductController.php';
+        $products = new ProductController();
+        $result = $products->getProduts();
+
+        $result = json_decode($result, true);
+
 	?>
     <div style="height: 100vh;">
         <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
@@ -53,19 +63,21 @@
                     </tr>
                 </thead>
                 <tbody>
+                <?php foreach($result as $key => $item): ?>
                 <tr>
                     <th scope="row">1</th>
-                    <td>Сухарики</td>
-                    <td>разрезанное и высушенное хлебобулочное изделие влажностью 8—12 %. Сухари подразделяются на сухари простые и сухари сдобные...</td>
-                    <td>24</td>
-                    <td>194</td>
-                    <td>хлебобулочные изделия</td>
+                    <td><?= $item['name'] ?></td>
+                    <td><?= (mb_substr($item['description'], 0, 110) . '...') ?></td>
+                    <td><?= $item['price'] ?></td>
+                    <td><?= $item['quantity'] ?></td>
+                    <td><?= $item['category_name'] ?></td>
                     <td scope="col"><a href="#">См. детали...</a></td>
                     <td scope="col">
                         <button type="button" class="btn btn-success my-1">Редактировать</button><br>
                         <button type="button" class="btn btn-danger my-1">Удалить</button>
                     </td>
                 </tr>
+                <?php endforeach; ?>
                 <tr>
                     <th scope="row">2</th>
                     <td>Хлеб белый</td>
