@@ -17,21 +17,11 @@
 			header('Location: login.php');
 		}
 
+        $id = $_GET['id'];
         include_once 'php/ProductController.php';
         $productsObj = new ProductController();
-        $products = $productsObj->getProduts();
+        $products = $productsObj->getProductDetails((int)$id);
         $products = json_decode($products, true);
-
-        include_once 'php/CancelTypeController.php';
-        $cancelTypeObj = new CancelTypeController();
-        $cancelTypes = $cancelTypeObj->getTypes();
-        $cancelTypes = json_decode($cancelTypes, true);
-
-        $result['message'] = null;
-        if(isset($_POST['cancel_type_change_btn'])) {
-            $result = $productsObj->changeProductQuantity();
-            $result = json_decode($result, true);
-        }
 
 	?>
     <div style="height: 100vh;">

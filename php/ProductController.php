@@ -43,4 +43,21 @@ class ProductController
 
         return json_encode($result);
     }
+
+    public function getProductDetails(int $id)
+    {
+        require "dbConnection.php";
+        $query = $connection->prepare("SELECT pd.*, ct.name as category_name FROM `products` pd left join `categories` ct on pd.category_id = ct.id WHERE pd.id = ?");
+        $query->bind_param('i', $id);
+        $query->execute();
+        $result = $query->get_result();
+
+        // todo: обработка, что такого товара не сущесвтует
+
+        $result = $result->fetch_all(MYSQLI_ASSOC);
+
+        var_dump($result);
+        exit();
+        // return json_encode($result);
+    }
 }
