@@ -2,10 +2,17 @@
 
 class ProductController
 {
-    public function getProduts()
+    private $connection;
+
+    public function __construct()
     {
         require "dbConnection.php";
-        $query = $connection->prepare("SELECT pd.*, ct.name as category_name FROM `products` pd left join `categories` ct on pd.category_id = ct.id");
+        $this->connection = $connection;
+    }
+
+    public function getProduts()
+    {
+        $query = $this->connection->prepare("SELECT pd.*, ct.name as category_name FROM `products` pd left join `categories` ct on pd.category_id = ct.id");
         $query->execute();
         $result = $query->get_result();
 
@@ -16,8 +23,6 @@ class ProductController
 
     public function changeProductQuantity()
     {
-        require "dbConnection.php";
-        
         $result = [
             'message' => null,
         ];
@@ -27,17 +32,17 @@ class ProductController
         $productId = (int)$_POST['product_id'];
 
         try {
-            $query = $connection->prepare("UPDATE `products` SET `quantity` = ?, `tmp_cancel_type` = ?  WHERE `id` = ?;");
+            $query = $this->connection->prepare("UPDATE `products` SET `quantity` = ?, `tmp_cancel_type` = ?  WHERE `id` = ?;");
             $query->bind_param('iii', $quantity, $cancelType, $productId);
 
             $query->execute();
             $query->get_result();
 
-            if (mysqli_affected_rows($connection)) {
+            if (mysqli_affected_rows($this->connection)) {
             } else {
-                $result['message'] = 'Произошла ошибка при попытке обновить количество товара ('. mysqli_error($connection) .')';
+                $result['message'] = 'Произошла ошибка при попытке обновить количество товара ('. mysqli_error($this->connection) .')';
             }
-        } catch (\Exceptions $ex) {
+        } catch (\Exception $ex) {
             $result['message'] = 'Произошла ошибка при попытке обновить количество товара ('. $ex->getMessage() .')';
         }
 
@@ -46,8 +51,7 @@ class ProductController
 
     public function getProductDetails(int $id)
     {
-        require "dbConnection.php";
-        $query = $connection->prepare("SELECT pd.*, ct.name as category_name FROM `products` pd left join `categories` ct on pd.category_id = ct.id WHERE pd.id = ?");
+        $query = $this->connection->prepare("SELECT pd.*, ct.name as category_name, ct.id as id_category FROM `products` pd left join `categories` ct on pd.category_id = ct.id WHERE pd.id = ?");
         $query->bind_param('i', $id);
         $query->execute();
         $result = $query->get_result();
@@ -56,8 +60,50 @@ class ProductController
 
         $result = $result->fetch_all(MYSQLI_ASSOC);
 
-        var_dump($result);
-        exit();
-        // return json_encode($result);
+        return json_encode($result);
+    }
+
+    public function update()
+    {
+        $result['message'] = null;
+        $productId = $_POST['product_id'];
+        $name = $_POST['name'];
+        $descr = $_POST['description'];
+        $price = $_POST['price'];
+        $quantity = $_POST['quantity'];
+        $cancelTypeId = $_POST['cancel_type_id'] ?? null;
+        $categoryId = $_POST['category_id'];
+
+        $pattern = '/^\d+(\.\d{2})?$/';
+        if (!preg_match($pattern, $price)) {
+            $result['message'] = 'Произошла ошибка при попытке обновить данные (Цена написана неверно)';
+            return json_encode($result);
+        }
+        if ((int)$quantity < 0) {
+            $result['message'] = 'Произошла ошибка при попытке обновить данные (Количество неверно)';
+            return json_encode($result);
+        }
+
+        try {
+            if (is_null($cancelTypeId)) {
+                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `category_id` = ? WHERE `id` = ?;");
+                $query->bind_param('ssdii', $name, $descr, $price, $categoryId, $productId);
+            } else {
+                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `quantity` = ?, `category_id` = ?, `tmp_cancel_type` = ?  WHERE `id` = ?;");
+                $query->bind_param('ssdiiii', $name, $descr, $price, $quantity, $categoryId, $cancelTypeId, $productId);
+            }
+
+            $query->execute();
+            $query->get_result();
+
+            if (mysqli_affected_rows($this->connection)) {
+            } else {
+                $result['message'] = 'Произошла ошибка при попытке обновить данные ('. mysqli_error($this->connection) .')';
+            }
+        } catch (\Exception $ex) {
+            $result['message'] = 'Произошла ошибка при попытке обновить данные ('. $ex->getMessage() .')';
+        }
+
+        return json_encode($result);
     }
 }

@@ -61,7 +61,7 @@
                     <td><?= (mb_substr($item['description'], 0, 110) . '...') ?></td>
                     <td><?= $item['price'] . ' руб.' ?></td>
                     <td>
-                        <input type="number" class="form-control" id="quantity_input" value=<?= $item['quantity'] ?? 0 ?> onclick="changeQuantity()">
+                        <input type="number" class="form-control" id="quantity_input" min="0" value=<?= $item['quantity'] ?? 0 ?> onchange="changeQuantity()" onclick="changeQuantity()">
                         <input type="hidden" class="form-control" id="product_id_input" value=<?= $item['id'] ?? 0 ?>>
                         <button type="button" class="btn btn-success my-1" data-bs-toggle="modal" data-bs-target="#cancel-type">Изменить</button><br>
                     </td>
