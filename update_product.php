@@ -52,7 +52,7 @@
                 <div class="alert alert-danger" role="alert"><?= $result['message'] ?></div>
             <?php endif; ?>
             <form action="" method="POST">
-                <h2>Обновление</h2>
+                <h2>Обновление товара/продукта</h2>
                 <input type="hidden" id="product_id" name="product_id" value="<?= $product["id"] ?>">
                 <div class="mb-3">
                     <label for="name" class="form-label">Название</label>

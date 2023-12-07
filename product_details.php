@@ -17,7 +17,10 @@
             header('Location: login.php');
         }
             
-        $id = $_GET['id'];
+        $id = $_GET['id'] ?? $_GET['product_id'] ?? -1;
+        if ($id < 0) {
+            header('Location: ../index.php');
+        }
         include_once 'php/ProductController.php';
         $productsObj = new ProductController();
         $products = $productsObj->getProductDetails((int)$id);
@@ -38,6 +41,10 @@
             }
         }
 
+        if (isset($_GET['delete_btn'])) {
+            $result = $productsObj->delete((int)$id);
+        }
+
 	?>
     <div style="height: 100vh;">
         <?php require_once "header.php"; ?>
@@ -48,10 +55,10 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title"><?= $product['name'] ?></h5>
-                    <p class="card-text"><?= $product['description'] ?></p>
+                    <p class="card-text">Описание: <?= $product['description'] ?></p>
                     <ul class="list-group list-group-flush" style="width: 50%;">
                         <li class="list-group-item">Цена: <?= $product['price'] ?> руб</li>
-                        <li class="list-group-item" style="width: 50%;">
+                        <li class="list-group-item" style="width: 50%;">Количество:
                             <input type="number" class="form-control" id="quantity_input" min="0" value=<?= $product['quantity'] ?? 0 ?> onchange="changeQuantity()" onclick="changeQuantity()">
                             <input type="hidden" class="form-control" id="product_id_input" value=<?= $product['id'] ?? 0 ?>>
                             <button type="button" class="btn btn-success my-1" data-bs-toggle="modal" data-bs-target="#cancel-type">Изменить</button><br>
@@ -59,7 +66,10 @@
                         <li class="list-group-item">Категория: <?= $product['category_name'] ?></li>
                     </ul>
                     <a class="btn btn-success my-1" href="/update_product.php?id=<?=$product['id']?>" role="button">Редактировать</a>
-                    <button type="button" class="btn btn-danger my-1">Удалить</button>
+                    <form name="delete_product_form" action="" method="GET">
+                        <input type="hidden" name="product_id" id="product_id" value="<?= $product['id'] ?>">
+                        <button type="submit" class="btn btn-danger my-1" name="delete_btn" id="delete_btn">Удалить</button>
+                    </form>
                 </div>
             </div>
 

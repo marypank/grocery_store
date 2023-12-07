@@ -40,6 +40,7 @@
             <?php if (!is_null($result['message'])) : ?>
                 <div class="alert alert-danger" role="alert"><?= $result['message'] ?></div>
             <?php endif; ?>
+            <a href="/create_product.php" class="btn btn-success my-2">Создать товар/продукт</a>
             <table class="table">
                 <thead>
                     <tr class="table-primary">
