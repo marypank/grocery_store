@@ -30,10 +30,11 @@ class ProductController
         $quantity = (int)$_POST['quantity'];
         $cancelType = (int)$_POST['cancel_type_id'];
         $productId = (int)$_POST['product_id'];
+        $login = $_SESSION['store_login'];
 
         try {
-            $query = $this->connection->prepare("UPDATE `products` SET `quantity` = ?, `tmp_cancel_type` = ?  WHERE `id` = ?;");
-            $query->bind_param('iii', $quantity, $cancelType, $productId);
+            $query = $this->connection->prepare("UPDATE `products` SET `quantity` = ?, `tmp_cancel_type` = ?, `who_login` = ? WHERE `id` = ?;");
+            $query->bind_param('iisi', $quantity, $cancelType, $login, $productId);
 
             $query->execute();
             $query->get_result();
@@ -59,7 +60,7 @@ class ProductController
         $result = $result->fetch_all(MYSQLI_ASSOC);
 
         if (!$result) {
-            // header('Location: ../index.php');
+            header('Location: ../index.php');
         }
 
         return json_encode($result);
@@ -75,6 +76,7 @@ class ProductController
         $quantity = $_POST['quantity'];
         $cancelTypeId = $_POST['cancel_type_id'] ?? null;
         $categoryId = $_POST['category_id'];
+        $login = $_SESSION['store_login'];
 
         $pattern = '/^\d+(\.\d{2})?$/';
         if (!preg_match($pattern, $price)) {
@@ -88,11 +90,11 @@ class ProductController
 
         try {
             if (is_null($cancelTypeId)) {
-                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `category_id` = ? WHERE `id` = ?;");
-                $query->bind_param('ssdii', $name, $descr, $price, $categoryId, $productId);
+                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `category_id` = ?, `who_login` = ? WHERE `id` = ?;");
+                $query->bind_param('ssdisi', $name, $descr, $price, $categoryId, $login, $productId);
             } else {
-                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `quantity` = ?, `category_id` = ?, `tmp_cancel_type` = ?  WHERE `id` = ?;");
-                $query->bind_param('ssdiiii', $name, $descr, $price, $quantity, $categoryId, $cancelTypeId, $productId);
+                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `quantity` = ?, `category_id` = ?, `tmp_cancel_type` = ?, `who_login` = ?  WHERE `id` = ?;");
+                $query->bind_param('ssdiiisi', $name, $descr, $price, $quantity, $categoryId, $cancelTypeId, $login, $productId);
             }
 
             $query->execute();
@@ -117,6 +119,7 @@ class ProductController
         $quantity = $_POST['quantity'];
         $cancelTypeId = 1; // (!) 1 - ВСЕГДА поступление/приход товара
         $categoryId = $_POST['category_id'];
+        $login = $_SESSION['store_login'];
 
         $result = [
             'message' => null,
@@ -140,8 +143,8 @@ class ProductController
         }
 
         try {
-            $query = $this->connection->prepare("INSERT INTO `products` (`name`, `description`, `price`, `quantity`, `category_id`, `tmp_cancel_type`) VALUES (?, ?, ?, ?, ?, ?);");
-            $query->bind_param('ssdiii', $name, $descr, $price, $quantity, $categoryId, $cancelTypeId);
+            $query = $this->connection->prepare("INSERT INTO `products` (`name`, `description`, `price`, `quantity`, `category_id`, `tmp_cancel_type`, `who_login`) VALUES (?, ?, ?, ?, ?, ?, ?);");
+            $query->bind_param('ssdiiis', $name, $descr, $price, $quantity, $categoryId, $cancelTypeId, $login);
 
             $query->execute();
             $query->get_result();

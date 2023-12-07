@@ -89,6 +89,7 @@
                             </select>
                             <input type="hidden" id="quantity" name="quantity">
                             <input type="hidden" id="product_id" name="product_id">
+                            <input type="hidden" name="product_id" id="product_id" value="<?= $product['id'] ?>">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
