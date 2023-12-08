@@ -6,7 +6,10 @@
                     <a class="nav-link active" href="/index.php">Продукты</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Категории</a>
+                    <a class="nav-link" href="/index_categories.php">Категории</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/index_types.php">Типы</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
