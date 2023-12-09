@@ -67,10 +67,10 @@ class CategoryController
             if (mysqli_affected_rows($this->connection)) {
                 header('Location: ../index_categories.php');
             } else {
-                $result['message'] = 'Произошла ошибка при попытке обновить название категории ('. mysqli_error($this->connection) .')';
+                $result['message'] = 'Произошла ошибка при попытке создать категорию ('. mysqli_error($this->connection) .')';
             }
         } catch (\Exception $ex) {
-            $result['message'] = 'Произошла ошибка при попытке обновить название категории ('. $ex->getMessage() .')';
+            $result['message'] = 'Произошла ошибка при попытке создать категорию ('. $ex->getMessage() .')';
         }
 
         return json_encode($result);
