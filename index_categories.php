@@ -16,6 +16,9 @@
     if (!isset($_SESSION['store_login'])) {
         header('Location: login.php');
     }
+    if ($_SESSION['store_access'] == 0) {
+        header('Location: index.php');
+    }
 
     $result['message'] = null;
 

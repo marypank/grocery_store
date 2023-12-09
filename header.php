@@ -5,19 +5,23 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="/index.php">Продукты</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/index_categories.php">Категории</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/index_types.php">Типы списания</a>
-                </li>
+                <?php if ($_SESSION['store_access'] == 1) : ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/index_categories.php">Категории</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/index_types.php">Типы списания</a>
+                    </li>
+                <?php endif; ?>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Княгиня Ольга (продавщица)</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?= $_SESSION['store_login'] . '('. $_SESSION['store_name'] . ')' ?></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Пользователи</a></li>
-                        <li><a class="dropdown-item" href="#">Выйти</a></li>
+                        <?php if ($_SESSION['store_access'] == 1) : ?>
+                            <li><a class="dropdown-item" href="#">Пользователи</a></li>
+                        <?php endif; ?>
+                        <li><a class="dropdown-item" href="/php/logOut.php">Выйти</a></li>
                     </ul>
                 </li>
             </ul>
