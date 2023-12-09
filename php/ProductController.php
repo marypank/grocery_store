@@ -12,7 +12,7 @@ class ProductController
 
     public function getProduts()
     {
-        $query = $this->connection->prepare("SELECT pd.*, ct.name as category_name FROM `products` pd left join `categories` ct on pd.category_id = ct.id");
+        $query = $this->connection->prepare("SELECT pd.*, ct.name as category_name FROM `products` pd left join `categories` ct on pd.category_id = ct.id ORDER BY pd.id");
         $query->execute();
         $result = $query->get_result();
 
@@ -31,6 +31,12 @@ class ProductController
         $cancelType = (int)$_POST['cancel_type_id'];
         $productId = (int)$_POST['product_id'];
         $login = $_SESSION['store_login'];
+
+        var_dump($quantity);
+        var_dump($cancelType);
+        var_dump($productId);
+        var_dump($login);
+        exit();
 
         try {
             $query = $this->connection->prepare("UPDATE `products` SET `quantity` = ?, `tmp_cancel_type` = ?, `who_login` = ? WHERE `id` = ?;");
