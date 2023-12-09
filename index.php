@@ -33,6 +33,11 @@
             $result = json_decode($result, true);
         }
 
+        $id = $_GET['product_id'] ?? 0;
+        if (isset($_GET['delete_btn']) && $id) {
+            $result = $productsObj->delete((int)$id);
+        }
+
 	?>
     <div style="height: 100vh;">
         <?php require_once "header.php"; ?>
@@ -69,8 +74,11 @@
                     <td><?= $item['category_name'] ?></td>
                     <td scope="col"><a href="/product_details.php?id=<?=$item['id']?>">См. детали...</a></td>
                     <td scope="col">
-                        <button type="button" class="btn btn-success my-1">Редактировать</button><br>
-                        <button type="button" class="btn btn-danger my-1">Удалить</button>
+                        <a class="btn btn-success my-1" href="/update_product.php?id=<?= $item['id']?>" role="button">Редактировать</a>
+                        <form name="delete_product_form" action="" method="GET">
+                            <input type="hidden" name="product_id" id="product_id" value="<?= $item['id'] ?>">
+                            <button type="submit" class="btn btn-danger my-1" name="delete_btn" id="delete_btn">Удалить</button>
+                        </form>
                     </td>
                 </tr>
                 <?php endforeach; ?>
