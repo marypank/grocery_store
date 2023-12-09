@@ -25,7 +25,19 @@
     $categories = json_decode($categories, true);
 
     if (isset($_POST['change_name_btn'])) {
-        $categoriesObj->update();
+        $result = $categoriesObj->update();
+        $result = json_decode($result, true);
+    }
+
+    if (isset($_POST['create_name_btn'])) {
+        $result = $categoriesObj->create();
+        $result = json_decode($result, true);
+    }
+
+    $id = $_GET['category_id_del'] ?? 0;
+    if (isset($_GET['delete_btn']) && $id) {
+        $result = $categoriesObj->delete((int)$id);
+        $result = json_decode($result, true);
     }
 
     ?>
@@ -35,7 +47,7 @@
             <?php if (!is_null($result['message'])) : ?>
                 <div class="alert alert-danger" role="alert"><?= $result['message'] ?></div>
             <?php endif; ?>
-            <a href="/create_product.php" class="btn btn-success my-2">Создать товар/продукт</a>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#create-category" class="btn btn-success my-2">Создать категорию</button>
             <table class="table">
                 <thead>
                 <tr class="table-primary">
@@ -54,7 +66,12 @@
                             <input type="hidden" name="cat_id" class="cat_id" value="<?= $item['id'] ?>">
                             <button type="button" class="btn btn-success my-1 update_btn" data-bs-toggle="modal" data-bs-target="#change-name">Редактировать</button>
                         </td>
-                        <td><button type="button" class="btn btn-danger my-1">Удалить</button></td>
+                        <td>
+                            <form name="delete_category_form" action="" method="GET">
+                                <input type="hidden" name="category_id_del" id="category_id_del" value="<?= $item['id'] ?>">
+                                <button type="submit" class="btn btn-danger my-1" name="delete_btn" id="delete_btn">Удалить</button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -77,6 +94,28 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
                                 <button type="submit" class="btn btn-primary" name="change_name_btn" value="change_name_btn">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal fade" id="create-category" tabindex="-1" aria-labelledby="create-category-label" aria-hidden="true">
+                <form action="" method="POST" name="create_category_form">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="change-name-label">Создать категорию</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Название</label>
+                                    <input type="text" class="form-control" name="name" id="name" minlength="2" maxlength="256" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                                <button type="submit" class="btn btn-primary" name="create_name_btn" value="create_name_btn">Сохранить</button>
                             </div>
                         </div>
                     </div>
