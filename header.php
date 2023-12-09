@@ -9,7 +9,7 @@
                     <a class="nav-link" href="/index_categories.php">Категории</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/index_types.php">Типы</a>
+                    <a class="nav-link" href="/index_types.php">Типы списания</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
