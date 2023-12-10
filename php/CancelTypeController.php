@@ -98,4 +98,14 @@ class CancelTypeController
 
         return json_decode($result);
     }
+
+    public function getCancelTypeById(int $id)
+    {
+        $query = $this->connection->prepare("SELECT * FROM `cancel_type` WHERE `id` = ?");
+        $query->bind_param('i', $id);
+        $query->execute();
+        $result = $query->get_result();
+
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 }
