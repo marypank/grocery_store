@@ -16,8 +16,11 @@
     if (!isset($_SESSION['store_login'])) {
         header('Location: login.php');
     }
-    $result['message'] = null;
+    if ($_SESSION['store_access'] == 0) {
+        header('Location: index.php');
+    }
 
+    $result['message'] = null;
 
     if (isset($_GET['quant_report'])) {
         if ($_GET['start_date_quant'] > $_GET['end_date_quant']) {

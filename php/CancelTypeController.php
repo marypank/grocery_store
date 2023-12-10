@@ -96,7 +96,7 @@ class CancelTypeController
             $result['message'] = 'Произошла ошибка при попытке удаления категории ('. $ex->getMessage() .')';
         }
 
-        return json_decode($result);
+        return json_encode($result);
     }
 
     public function getCancelTypeById(int $id)
