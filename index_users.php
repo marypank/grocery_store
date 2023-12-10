@@ -31,6 +31,9 @@
         if (isset($_GET['delete_btn']) && $id) {
             $result = $usersObj->deleteUser((int)$id);
             $result = json_decode($result, true);
+            if (is_null($result['message'])) {
+                header('Location: index_users.php');
+            }
         }
 
         if (isset($_POST['change_access_btn'])) {

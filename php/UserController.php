@@ -105,7 +105,7 @@ class UserController
         $result['message'] = null;
 
         try {
-            $query = $this->connection->prepare("DELETE FROM `categories` WHERE `id` = ?");
+            $query = $this->connection->prepare("DELETE FROM `users` WHERE `id` = ?");
             $query->bind_param('i', $id);
 
             $query->execute();
