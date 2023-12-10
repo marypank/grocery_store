@@ -31,6 +31,10 @@
         if(isset($_POST['cancel_type_change_btn'])) {
             $result = $productsObj->changeProductQuantity();
             $result = json_decode($result, true);
+
+            if (is_null($result['message'])) {
+                header('Location: index.php');
+            }
         }
 
         $id = $_GET['product_id_del'] ?? 0;

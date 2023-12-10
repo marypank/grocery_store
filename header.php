@@ -19,7 +19,8 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?= $_SESSION['store_login'] . '('. $_SESSION['store_name'] . ')' ?></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <?php if ($_SESSION['store_access'] == 1) : ?>
-                            <li><a class="dropdown-item" href="#">Пользователи</a></li>
+                            <li><a class="dropdown-item" href="/index_users.php">Пользователи</a></li>
+                            <li><a class="dropdown-item" href="/index_reports.php">Отчеты</a></li>
                         <?php endif; ?>
                         <li><a class="dropdown-item" href="/php/logOut.php">Выйти</a></li>
                     </ul>
