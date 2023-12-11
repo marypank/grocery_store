@@ -22,7 +22,7 @@ class ReportController
     {
         $response = [];
 
-        $query = $this->connection->prepare("SELECT * FROM products_quantity_his pqh LEFT JOIN products pd on pqh.product_id = pd.id WHERE date_stamp BETWEEN ? and ? ORDER BY date_stamp;");
+        $query = $this->connection->prepare("SELECT * FROM products_quantity_his pqh LEFT JOIN products pd on pqh.product_id = pd.id WHERE date(date_stamp) >= ? and date(date_stamp) <= ? ORDER BY date_stamp;");
         $query->bind_param('ss', $dateStart, $dateEnd);
         $query->execute();
         $result = $query->get_result();

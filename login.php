@@ -13,7 +13,7 @@
         if(session_id() == '') {
             session_start();
         }
-        if (!isset($_SESSION['store_login'])) {
+        if (isset($_SESSION['store_login'])) {
             header('Location: index.php');
         }
         $result = [

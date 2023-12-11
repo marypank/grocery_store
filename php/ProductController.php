@@ -40,14 +40,13 @@ class ProductController
         $quantity = (int)$_POST['quantity'];
         $cancelType = (int)$_POST['cancel_type_id'];
         $productId = (int)$_POST['product_id'];
-        $login = $_SESSION['store_login'];
 
         $product = $this->getProductById($productId);
         $product = current($product);
 
         try {
-            $query = $this->connection->prepare("UPDATE `products` SET `quantity` = ?, `tmp_cancel_type` = ?, `who_login` = ? WHERE `id` = ?;");
-            $query->bind_param('iisi', $quantity, $cancelType, $login, $productId);
+            $query = $this->connection->prepare("UPDATE `products` SET `quantity` = ? WHERE `id` = ?;");
+            $query->bind_param('ii', $quantity, $productId);
 
             $query->execute();
             $query->get_result();
@@ -108,24 +107,25 @@ class ProductController
 
         try {
             if (is_null($cancelTypeId)) {
-                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `category_id` = ?, `who_login` = ? WHERE `id` = ?;");
-                $query->bind_param('ssdisi', $name, $descr, $price, $categoryId, $login, $productId);
+                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `category_id` = ? WHERE `id` = ?;");
+                $query->bind_param('ssdii', $name, $descr, $price, $categoryId, $productId);
             } else {
-                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `quantity` = ?, `category_id` = ?, `tmp_cancel_type` = ?, `who_login` = ?  WHERE `id` = ?;");
-                $query->bind_param('ssdiiisi', $name, $descr, $price, $quantity, $categoryId, $cancelTypeId, $login, $productId);
-
-                $cancelType = $this->cancelTypeController->getCancelTypeById($cancelTypeId);
-                $cancelType = current($cancelType);
-                $cancelTypeText = $cancelType['name'] ?? null;
-                if ($cancelTypeText) {
-                    $this->registerChanges(self::UPDATE_OPERATION_TYPE, $product['quantity'], $quantity, $cancelTypeText, $productId, null);
-                }
+                $query = $this->connection->prepare("UPDATE `products` SET `name` = ?, `description` = ?, `price` = ?, `quantity` = ?, `category_id` = ?  WHERE `id` = ?;");
+                $query->bind_param('ssdiii', $name, $descr, $price, $quantity, $categoryId, $productId);
             }
 
             $query->execute();
             $query->get_result();
 
             if (mysqli_affected_rows($this->connection)) {
+                if (!is_null($cancelTypeId)) {
+                    $cancelType = $this->cancelTypeController->getCancelTypeById($cancelTypeId);
+                    $cancelType = current($cancelType);
+                    $cancelTypeText = $cancelType['name'] ?? null;
+                    if ($cancelTypeText) {
+                        $this->registerChanges(self::UPDATE_OPERATION_TYPE, $product['quantity'], $quantity, $cancelTypeText, $productId, null);
+                    }
+                }
             } else {
                 $result['message'] = 'Произошла ошибка при попытке обновить данные ('. mysqli_error($this->connection) .')';
             }
@@ -168,8 +168,8 @@ class ProductController
         }
 
         try {
-            $query = $this->connection->prepare("INSERT INTO `products` (`name`, `description`, `price`, `quantity`, `category_id`, `tmp_cancel_type`, `who_login`) VALUES (?, ?, ?, ?, ?, ?, ?);");
-            $query->bind_param('ssdiiis', $name, $descr, $price, $quantity, $categoryId, $cancelTypeId, $login);
+            $query = $this->connection->prepare("INSERT INTO `products` (`name`, `description`, `price`, `quantity`, `category_id`, `who_login`) VALUES (?, ?, ?, ?, ?, ?);");
+            $query->bind_param('ssdiis', $name, $descr, $price, $quantity, $categoryId, $login);
 
             $query->execute();
             $query->get_result();
