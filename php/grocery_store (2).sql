@@ -3,11 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Дек 11 2023 г., 19:07
+-- Время создания: Дек 19 2023 г., 09:57
 -- Версия сервера: 10.4.28-MariaDB
 -- Версия PHP: 8.1.17
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -21,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- База данных: `grocery_store`
 --
-CREATE DATABASE IF NOT EXISTS `grocery_store` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `grocery_store`;
 
 -- --------------------------------------------------------
 
@@ -283,7 +280,6 @@ ALTER TABLE `products`
 --
 ALTER TABLE `products_quantity_his`
   ADD CONSTRAINT `prod_his_login_fk` FOREIGN KEY (`who`) REFERENCES `users` (`user_name`) ON DELETE SET NULL;
-SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
